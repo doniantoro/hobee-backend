@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	Register(user request.UserInput) (model.User, error)
-	Login(input request.UserInput) (model.User, error)
+	Login(input request.UserInput) (string, error)
 }
 
 type service struct {
@@ -20,22 +20,24 @@ func AuthService() Service {
 	return &service{}
 }
 
-func (s service) Login(input request.UserInput) (model.User, error) {
+func (s service) Login(input request.UserInput) (string, error) {
 
 	var userRepo = repository.AuthRepository()
 	getUser, _ := userRepo.Login(input.Email)
 	if getUser.Id == 0 {
 
-		return getUser, errors.New("No User Found")
+		return "failed", errors.New("No User Found")
 	}
 
 	var err = bcrypt.CompareHashAndPassword([]byte(getUser.Password), []byte(input.Password))
 
 	if err != nil {
 
-		return getUser, err
+		return "failed", err
 	}
-	return getUser, nil
+	var jwtService = JwtService()
+	token, err := jwtService.GenerateToken(getUser)
+	return token, nil
 
 }
 

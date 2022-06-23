@@ -2,10 +2,11 @@ package service
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 	"hobee/model"
+	"log"
+	"os"
 )
-
-var SECRET_KEY = []byte("DoNiAn1234")
 
 type serviceInterface interface {
 	GenerateToken(user model.User) (string, error)
@@ -19,6 +20,12 @@ func JwtService() serviceInterface {
 }
 
 func (j jwtService) GenerateToken(user model.User) (string, error) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	SECRET_KEY := []byte(os.Getenv("SECRET_KEY"))
+
 	claim := jwt.MapClaims{}
 	claim["user_id"] = user.Id
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)

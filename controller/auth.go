@@ -9,9 +9,9 @@ import (
 )
 
 func Login(c *gin.Context) {
-	var user request.UserInput
+	var UserInput request.UserInput
 
-	err := c.ShouldBindJSON(&user)
+	err := c.ShouldBindJSON(&UserInput)
 
 	if err != nil {
 		err := helper.Response(http.StatusBadGateway, "Failed", "There is required failed", err.Error())
@@ -21,35 +21,20 @@ func Login(c *gin.Context) {
 	}
 	var authservice = service.AuthService()
 
-	login, err := authservice.Login(user)
+	responseLogin, err := authservice.Login(UserInput)
 	if err != nil {
 
 		response := helper.Response(http.StatusBadGateway, "Failed", err.Error(), "")
 
 		c.JSON(http.StatusBadGateway, response)
-		//fmt.Println(err)
 		return
 	}
-	//var succes = helper.Response(200,"Succes","Login Succes","")
-
-	var jwtService = service.JwtService()
-	generateToken, err := jwtService.GenerateToken(login)
-	if err != nil {
-		response := helper.Response(http.StatusBadGateway, "Failed", err.Error(), "")
-
-		c.JSON(http.StatusBadGateway, response)
-	}
-	var data[] := []data2 {
-		"data" : "d",
-	};
-	//data.token = generateToken
-	response := helper.Response(200, "Succes", "Login Succes", []data)
+	response := helper.Response(200, "Succes", "Login Succes", responseLogin)
 	c.JSON(http.StatusOK, response)
 }
 
 func Register(c *gin.Context) {
 	var UserInput request.UserInput
-
 	err := c.ShouldBindJSON(&UserInput)
 
 	if err != nil {
