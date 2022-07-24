@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"hobee/service"
+	"hobee/helper"
 )
 
 func GetAllCategory(c *gin.Context) {
@@ -11,9 +12,13 @@ func GetAllCategory(c *gin.Context) {
 	var categoryService = service.NewCategoryService()
 	category, err := categoryService.GetAllCategory()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		
+		response := helper.Response(http.StatusInternalServerError , "Failed", err.Error(), "")
+		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
 	
-	c.JSON(http.StatusOK, gin.H{"data": category})
+	response := helper.Response(200, "Succes", "Succes Get All Data", category)
+	
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
