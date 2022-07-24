@@ -28,6 +28,8 @@ func (j jwtService) GenerateToken(user model.User) (string, error) {
 
 	claim := jwt.MapClaims{}
 	claim["user_id"] = user.Id
+	claim["name"] = user.Name
+	claim["email"] = user.Email
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	signedToken, err := token.SignedString(SECRET_KEY)
 	if err != nil {

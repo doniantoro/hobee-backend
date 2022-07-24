@@ -5,15 +5,10 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
 	"log"
 	"os"
 )
-
-type Product struct {
-	gorm.Model
-	Code  string
-	Price uint
-}
 
 func ConnectionDatabase() *gorm.DB {
 	err := godotenv.Load()
@@ -33,7 +28,7 @@ func ConnectionDatabase() *gorm.DB {
 	}
 
 	// Migrate the schema
-	//db.AutoMigrate(&Product{})
+	// db.AutoMigrate(model.Venue{})
 
 	return db
 }
